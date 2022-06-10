@@ -2,22 +2,22 @@ use std::fs;
 
 fn main() {
     let contents = fs::read_to_string("input.txt").expect("file not found");
-    let mut lines = contents.lines();
+    let lines = contents.lines();
 
-    // first value is the default min
-    let mut current_min: i32 = lines.next().unwrap().parse().unwrap();
-    let mut current_inc_count = 0;
+    let lines_arr: Vec<i32> = lines.map(|line| line.parse().unwrap()).collect();
 
-    for l in lines {
-        let parsed_line: i32 = l.parse().unwrap();
+    let mut count = 0;
 
-        if parsed_line > current_min {
-            current_inc_count += 1;
-            current_min = parsed_line;
-        } else {
-            current_min = parsed_line;
+    for (i, _) in lines_arr.iter().enumerate() {
+        if i <= lines_arr.len() - 4 {
+            let prev_value: i32 = lines_arr[i..i + 3].iter().sum();
+            let next_value: i32 = lines_arr[i + 1..i + 4].iter().sum();
+
+            if next_value > prev_value {
+                count += 1;
+            }
         }
     }
 
-    println!("inc count: {}", current_inc_count);
+    println!("{}", count);
 }
